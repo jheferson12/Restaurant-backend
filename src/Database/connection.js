@@ -1,9 +1,8 @@
-const { Connection } = require('pg')
 const { Sequelize }= require('sequelize')
-var database= 'RestaurantDB';
+var dataBase= 'RestaurantDB';
 var userName='postgres';
-var password="123456789" //Hombredejuego1A
-const connection = new Sequelize(database,userName,password,{
+var password="Hombredejuego1A"
+const connection = new Sequelize(dataBase,userName,password,{
     host: 'localhost',
     dialect: 'postgres'
 });
