@@ -23,10 +23,10 @@ async function createProduct(req, res){
     }
 }
 
-async function listProduct(){
+async function listProduct(req,res){
     try{
         await product.findAll({
-            attribute: [
+            attributes: [
                 'productId',
                 'productName',
                 'productDescription',
@@ -34,26 +34,32 @@ async function listProduct(){
             ],
             order: ['productName'],
             include: {
-                model: 'restaurant', 
-                where: { restaurantId: req.params.restaurantId }
+                model: restaurant,
+                where: { restaurantId : req.params.restaurantId },
+                attributes: ['restaurantName']
             }
         }).then(function (data){
             return res.status(200).json({
                 data: data
             });
-        }).catch(error=>{
+        }).catch(error => {
             return res.status(400).json({
                 error: error
             });
         })
-    }catch(e){
+    }
+    catch(e){
         console.log(e);
     }
 }
 
 async function updateProduct(req, res){
     try{
-        await product.updateProduct({
+        await product.update({
+            productName:req.body.productName,
+            productDescription:req.body.productDescription,
+            productPrice:req.body.productPrice,
+            restaurantId:req.body.restaurantId
 
         }).then(function(data){
             return res.status(200).json({
@@ -70,25 +76,43 @@ async function updateProduct(req, res){
    
 }
 
-async function disableProduct(){
+async function disableProduct(req,res){
     try{
-        await product.disableProduct({
-
-        }).then(function(data){
+        await product.destroy({
+            where: { productId :  req.params.productId }
+        }).then(function (data){
             return res.status(200).json({
-                data:data
+                data: data
             });
-        }).catch(error=>{
+        }).catch(error => {
             return res.status(400).json({
-                error:error
+                error: error
             });
         })
-    }catch(e){
+    }
+    catch(e){
         console.log(e);
     }
 }
 
-async function enableProduct(){}
+async function enableProduct(req,res){
+    try{
+    await product.restore({
+        where: { productId :  req.params.productId }
+    }).then(function (data){
+        return res.status(200).json({
+            data: data
+        });
+    }).catch(error => {
+        return res.status(400).json({
+            error: error
+        });
+    })
+}
+catch (e){
+    console.log(e);
+}
+}
 
 module.exports = {
     createProduct,
